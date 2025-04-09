@@ -7,6 +7,8 @@ USAGE:
 mvn exec:java   
 --------
 
+press 8 first in the terminal menu to populate the database with mock data
+
 
 
 
