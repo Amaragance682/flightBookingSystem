@@ -72,7 +72,7 @@ public class SQLiteBookingRepo implements BookingRepo {
         try (PreparedStatement pstmt = connection.prepareStatement(sqlSelect)) {
             pstmt.setString(1, bookingID);
             ResultSet rs = pstmt.executeQuery();
-            return rs.next(); // returns true if a booking with the given ID exists
+            return rs.next(); // returns true if a booking with targeted ID exists
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

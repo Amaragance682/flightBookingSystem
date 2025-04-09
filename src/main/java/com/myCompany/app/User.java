@@ -32,7 +32,7 @@ public class User {
             System.out.println("You do not have permission to create flights as you are not an admin.");
             return;
         }
-        // Create a new flight object and add it to your system
+        // flight object creator
         Flight newFlight = new Flight(flightID, date, departureLocation, destination, status, availableSeats);
         System.out.println("Flight created: " + newFlight.getDetails(flightID));
     }
@@ -45,6 +45,8 @@ public class User {
         // Remove the flight from your system
         System.out.println("Flight with ID " + flightID + " has been deleted.");
     }
+
+    // !!!FEATURES THAT ARE POSSIBLE BUT HAVENT BEEN ADDED!!!
 
     /*
     public void leaveReview(String flightID, String rating, String comment) {

@@ -13,9 +13,6 @@ public class MainApp {
         FlightRepo flightRepo = new SQLiteFlightRepo(flightDbPath);
         BookingRepo bookingRepo = new SQLiteBookingRepo(bookingDbPath);
 
-        // You can create service classes that use these repos,
-        // or invoke the repo methods directly if appropriate for a simple demo.
-        // For simplicity, here we'll interact directly.
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Velkomin á flugsíðuna!");
@@ -61,8 +58,7 @@ public class MainApp {
                     flightRepo.deleteFlight(scanner.nextLine());
                     break;
 
-                case 3: // FYRRI PARTUR VIRKAR, VANTAR SELECTION OPTION
-                    // tharf ad baeta selection system herna, notandi tharf ad geta valid flight sem er displayad og bookad thad, 
+                case 3: // VIRKAR
 
                     System.out.print("Enter destination: ");
                     String searchDestination = scanner.nextLine();
@@ -75,17 +71,16 @@ public class MainApp {
                         System.out.println("No flights found.");
                         break;
                     }
-                    // Display the flights with a leading number.
+
                     System.out.println("Found Flights:");
                     for (int i = 0; i < foundFlights.length; i++) {
                         Flight f = foundFlights[i];
-                        // For each flight, display a summary (you can adjust what's printed).
+
                         System.out.println((i + 1) + ": " + f.getFlightID() + " - " + f.getDate() +
                                         ", Destination: " + f.getDestination() +
                                         ", Available Seats: " + f.getAvailableSeats());
                     }
                     
-                    // Prompt the user to select one of the flights by its number.
                     System.out.print("Enter the flight number to book: ");
                     int selection;
                     try {
@@ -94,35 +89,34 @@ public class MainApp {
                         System.out.println("Invalid number entered.");
                         break;
                     }
-                    
-                    // Validate the selection.
+
                     if (selection < 1 || selection > foundFlights.length) {
                         System.out.println("Invalid selection. Please choose a number between 1 and " + foundFlights.length);
                         break;
                     }
                     
-                    // Get the selected flight.
+                    // get selected flight
                     Flight selectedFlight = foundFlights[selection - 1];
                     
-                    // Check available seats (redundant if your search already returned only flights with seats, but good to double-check).
+                    // !!!!!!!!!!!super edge case checker thegar 2 manneskjur eru ad booka sidasta saeti og ein manneskjan naer saetinu fyrst, tha ma hin ekki booka!!!!!!!!!
                     if (selectedFlight.getAvailableSeats() <= 0) {
                         System.out.println("No available seats for this flight.");
                         break;
                     }
                     
-                    // Prompt for userID.
+                    // userID prompt
                     System.out.print("Enter your User ID: ");
                     String userID = scanner.nextLine();
 
-                    // Create the booking.
+                    // booking creating
                     Booking booking = new Booking(selectedFlight.getFlightID(), userID);
                     bookingRepo.confirmBooking(booking);
-                    // Decrement available seats in the flight record.
+                    // decrement
                     flightRepo.decrementAvailableSeats(selectedFlight.getFlightID());
                     System.out.println("Booking confirmed for flight " + selectedFlight.getFlightID());
                     break;
 
-                case 4: // VIRKAR, THARF BARA EDGE CASE HANDLING, s.s. ef flightID er ekki til
+                case 4: // VIRKAR
                     System.out.print("Enter Flight ID to book: ");
                     String bookingFlightID = scanner.nextLine();
                     System.out.print("Enter your User ID: ");
@@ -146,11 +140,22 @@ public class MainApp {
                     flightRepo.decrementAvailableSeats(bookingFlightID);
                     break;
 
-                case 5: // VIRKAR, vantar bara checker ef flug og booking se til til ad byrja med
+                case 5: // VIRKAR
                     System.out.print("Enter flight ID of the booking: ");
                     String flightToBeIncremented = scanner.nextLine();
                     System.out.print("Enter booking ID to cancel: ");
                     String bookingToBeDeleted = scanner.nextLine();
+
+                    Flight flight123 = flightRepo.getFlightById(flightToBeIncremented);
+                    if (flight123 == null) {
+                        System.out.println("Flight not found. Cannot cancel booking.");
+                        break;
+                    }
+                    
+                    if (!bookingRepo.containsBooking(bookingToBeDeleted)) {
+                        System.out.println("Booking not found. Cannot cancel booking.");
+                        break;
+                    }
 
                     bookingRepo.deleteBooking(bookingToBeDeleted);
                     flightRepo.incrementAvailableSeats(flightToBeIncremented);
@@ -172,7 +177,7 @@ public class MainApp {
                     break;
 
                 case 8: // VIRKAR, nota thetta thegar thu notar verkefnid
-                    // populate the database with some test data
+
                     Flight testFlight1 = new Flight("FL123", "2023-10-01", "Reykjavik", "New York", "On Time", 100);
                     Flight testFlight2 = new Flight("FL456", "2023-10-02", "Reykjavik", "London", "Delayed", 100);
                     Flight testFlight3 = new Flight("FL789", "2023-10-03", "Reykjavik", "Paris", "On Time", 100);

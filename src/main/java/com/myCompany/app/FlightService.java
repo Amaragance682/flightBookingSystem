@@ -12,14 +12,13 @@ public class FlightService {
         if (flight != null) {
             return flight.getAvailableSeats();
         }
-        // Return 0 if the flight doesn't exist.
         return 0;
     }
 
     public void decrementAvailableSeats(String flightID) {
         Flight flight = flightRepo.getFlightById(flightID);
         if (flight != null) {
-            flight.occupySeat(); // Decrement available seats by 1
+            flight.occupySeat(); // decrement available seats by 1
 
         }
     }
@@ -27,7 +26,7 @@ public class FlightService {
     public void incrementAvailableSeats(String flightID) {
         Flight flight = flightRepo.getFlightById(flightID);
         if (flight != null) {
-            flight.freeSeat(); // Increment available seats by 1
+            flight.freeSeat(); // increment available seats by 1
 
         }
     }

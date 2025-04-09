@@ -118,7 +118,7 @@ public class SQLiteFlightRepo implements FlightRepo {
         return flights.toArray(new Flight[0]);
     }
 
-    @Override
+    @Override // deprecated function, ekki notad, gerdi manual booking call eftir ad searcha
     public void selectFlightAndBook(String flightID, String userID) {
         // temp placeholder logic for booking a flight
         System.out.println("Flight " + flightID + " booked for user " + userID);
@@ -136,7 +136,7 @@ public class SQLiteFlightRepo implements FlightRepo {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0; // Return 0 if flight not found or on error
+        return 0; // return 0 ef not found
     }
 
     @Override  
