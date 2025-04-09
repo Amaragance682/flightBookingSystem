@@ -4,9 +4,11 @@ package com.myCompany.app;
 public class BookingService {
 
     private BookingRepo bookingRepo; // booking repo objectin okkar til ad geta breytt gognum
+    private FlightRepo flightRepo; // flight service objectin okkar til ad geta breytt gognum
 
-    public BookingService(BookingRepo bookingRepo) {
+    public BookingService(BookingRepo bookingRepo, FlightRepo flightRepo) {
         this.bookingRepo = bookingRepo;
+        this.flightRepo = flightRepo;
     }
 
 
@@ -19,26 +21,42 @@ public class BookingService {
      */
 
     // this is just the same as the booking creator
-    public boolean confirmBooking(String userID, String flightID) { 
+    public void confirmBooking(String userID, String flightID) { 
 
         // annars getum vid buid til valid bookingID 
-        if (bookingRepo.getAvailableSeats() <= 0) { // athugum hvort laus saeti se til
-            System.out.println("Engin laus saeti til! booking ekki mogulegt!!!");
-            return false; // ef engin laus saeti til, skilar false
+        Flight flight = flightRepo.getFlightById(flightID); // na i flight objectid
+
+        if (flight == null) { // athugum hvort flugid se til
+            System.out.println("Flugid er ekki til!!! booking ekki mogulegt!!!");
         }
+        if (flight.getAvailableSeats() <= 0) { // athugum hvort laus saeti se til
+            System.out.println("Engin laus saeti til! booking ekki mogulegt!!!");
+        }
+
         Booking booking = new Booking(flightID, userID);
-        bookingRepo.confirmBooking(booking); // add booking to the database
-        return true; // ef booking var successful, skilar true
+        if (bookingRepo.containsBooking(booking.getBookingID())) { // athugum hvort bookingID se til i databaseinu
+            System.out.println("BookingID er til i databaseinu!!! booking mogulegt!!!");
+            bookingRepo.confirmBooking(booking); // add booking to the database
+            flightRepo.decrementAvailableSeats(flightID);
+            return;
+        }
+        System.out.println("BookingID er ekki til i databaseinu!!! booking ekki mogulegt!!!");
+ 
     }
 
     public void deleteBooking(String bookingID) {
         bookingRepo.deleteBooking(bookingID); // delete booking from the database
+
+        // decrementa valueid i database:
+        flightRepo.incrementAvailableSeats(bookingID); // this should be the flightID, but we need to get it from the booking object
     }
 
-    public void updateBooking(Booking booking) {
-        bookingRepo.updateBooking(booking); // update booking in the database
-    }
     public Booking[] getBookings() {
         return bookingRepo.getBookings(); // aetti ad na i allar current bookings i databaseinu
+    }
+
+
+    public boolean containsBooking(String bookingID) {
+        return bookingRepo.containsBooking(bookingID); // athugum hvort bookingID se til i databaseinu
     }
 }

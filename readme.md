@@ -13,9 +13,23 @@ MockBookingRepo (Mock Object):
 BookingService (Controller):
 – This class contains the business logic to create and delete bookings.
 – It depends on a BookingRepo to store and remove bookings.
-– By using dependency injection (passing in a BookingRepo via the constructor), you can later substitute the mock (for testing) or a real repository (for production).
+– By using dependency injection (passing in a BookingRepo via the constructor), you cUsaan later substitute the mock (for testing) or a real repository (for production).
 
 BookingServiceTest (JUnit Test Fixture):
 – Uses JUnit to set up tests for BookingService.
 – In the @BeforeEach method, it creates a MockBookingRepo and injects it into a new BookingService instance.
 – Test cases (such as creating or deleting a booking) call BookingService methods and then verify that the expected changes are reflected in the mock repository.
+
+
+
+
+
+USAGE:
+--------
+mvn test
+--------
+
+
+
+
+
